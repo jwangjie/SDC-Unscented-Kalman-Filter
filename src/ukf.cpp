@@ -107,17 +107,17 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       //polar to cartesian 
       x_(0) = rho * cos(phi);               // Px
       x_(1) = rho * sin(phi);               // Py
-      x_(2) = 4;  // V : 
-      x_(3) = rhodot * cos(phi);                            // phi
-      x_(4) = rhodot * sin(phi);                            // phidot
+      x_(2) = sqrt(v_x * v_x + v_y * v_y);  // V : 
+      x_(3) = 0;                            // phi
+      x_(4) = 0;                            // phidot
 
       // initial state convariance matirx
       // Values are tunable, not sure based on what
-      P_ << std_radr_*std_radr_, 0, 0, 0, 0,
-            0, std_radr_*std_radr_, 0, 0, 0,
+      P_ << 1, 0, 0, 0, 0,
+            0, 1, 0, 0, 0,
             0, 0, 1, 0, 0,
-            0, 0, 0, std_radphi_, 0,
-            0, 0, 0, 0, std_radphi_;
+            0, 0, 0, 1, 0,
+            0, 0, 0, 0, 1;
 
       R_radar_ << std_radr_*std_radr_, 0, 0,
                   0, std_radphi_*std_radphi_, 0, 
@@ -128,16 +128,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       x_(0) = meas_package.raw_measurements_(0);
       x_(1) = meas_package.raw_measurements_(1);
       x_(2) = 4;              // V : tunable
-      x_(3) = 0.5;            // phi: tuable
+      x_(3) = 0.0;            // phi: tuable
       x_(4) = 0.0;        // phidot: tunable
 
       // initial state convariance matirx
       // Values are tunable, not sure based on what
-      P_ << std_laspx_*std_laspx_, 0, 0, 0, 0,
-            0, std_laspy_*std_laspy_, 0, 0, 0,
-            0, 0, 1, 0, 0,
-            0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1;
+      P_ << .1, 0, 0, 0, 0,
+             0, .1, 0, 0, 0,
+             0, 0, .01, 0, 0,
+             0, 0, 0, 1, 0,
+             0, 0, 0, 0, 1;
 
       R_laser_ << std_laspx_*std_laspx_, 0,
                   0, std_laspy_*std_laspy_;
