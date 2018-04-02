@@ -204,6 +204,14 @@ void UKF::Prediction(double delta_t) {
   for (int i = 0; i < n_x_; i++){
     Xsig.col(i+1)     = x_ + sqrt(lambda_ + n_x_) * A.col(i);
     Xsig.col(i+1+n_x_) = x_ - sqrt(lambda_ + n_x_) * A.col(i);
+
+    //Normalizing phi_sig
+    while (Xsig(3, i+1) >  M_PI) Xsig(3, i+1) -= 2.*M_PI;
+    while (Xsig(3, i+1) < -M_PI) Xsig(3, i+1) += 2.*M_PI;
+
+    while (Xsig(3, i+1+n_x_) >  M_PI) Xsig(3, i+1+n_x_) -= 2.*M_PI;
+    while (Xsig(3, i+1+n_x_) < -M_PI) Xsig(3, i+1+n_x_) += 2.*M_PI;
+
   }
 
   //print result
@@ -241,6 +249,13 @@ void UKF::Prediction(double delta_t) {
   for (int i = 0; i< n_aug_; i++){
     Xsig_aug.col(i+1)        = x_aug + sqrt(lambda_ + n_aug_) * L.col(i);
     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt(lambda_ + n_aug_) * L.col(i);
+
+    //Normalizing phi_sig_aug
+    while (Xsig_aug(3, i+1) >  M_PI) Xsig_aug(3, i+1) -= 2.*M_PI;
+    while (Xsig_aug(3, i+1) < -M_PI) Xsig_aug(3, i+1) += 2.*M_PI;
+
+    while (Xsig_aug(3, i+1+n_aug_) >  M_PI) Xsig_aug(3, i+1+n_aug_) -= 2.*M_PI;
+    while (Xsig_aug(3, i+1+n_aug_) < -M_PI) Xsig_aug(3, i+1+n_aug_) += 2.*M_PI;
   }
 
   //print result
@@ -288,6 +303,11 @@ void UKF::Prediction(double delta_t) {
     Xsig_pred_(0,i) = px_p;
     Xsig_pred_(1,i) = py_p;
     Xsig_pred_(2,i) = v_p;
+
+    //Normalizing phi_sig_pred
+    while (Xsig_pred_(3, i) >  M_PI) Xsig_pred_(3, i) -= 2.*M_PI;
+    while (Xsig_pred_(3, i) < -M_PI) Xsig_pred_(3, i) += 2.*M_PI;
+
     Xsig_pred_(3,i) = yaw_p;
     Xsig_pred_(4,i) = yawd_p;
   }
