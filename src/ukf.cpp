@@ -56,6 +56,7 @@ UKF::UKF() {
   n_aug_ = 7;
   // predicted sigma points matrix
   Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
+  Xsig_pred_.fill(0);
 
   // define spreading parameter
   // lambda for generating sigma and augmented states are different !!!!!!!!!!!!
@@ -108,8 +109,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       x_(0) = rho * cos(phi);               // Px
       x_(1) = rho * sin(phi);               // Py
       x_(2) = sqrt(v_x * v_x + v_y * v_y);  // V : 
-      x_(3) = 0;                            // phi
-      x_(4) = 0;                            // phidot
+      x_(3) = 1;                            // phi
+      x_(4) = 0.1;                            // phidot
 
       // initial state convariance matirx
       // Values are tunable, not sure based on what
@@ -169,6 +170,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   /*
   Update
   */
+
   if (meas_package.sensor_type_ == MeasurementPackage::LASER){
     UpdateLidar(meas_package);
   }
@@ -188,6 +190,8 @@ void UKF::Prediction(double delta_t) {
   Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
+
+  /*
   ///* create sigma point matrix =======================================
 
    // Define spreading parameter
@@ -216,6 +220,7 @@ void UKF::Prediction(double delta_t) {
 
   //print result
   std::cout << "Xsig = " << std::endl << Xsig << std::endl;
+  */
 
   ///* do augmentation =================================================
 
@@ -250,12 +255,14 @@ void UKF::Prediction(double delta_t) {
     Xsig_aug.col(i+1)        = x_aug + sqrt(lambda_ + n_aug_) * L.col(i);
     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt(lambda_ + n_aug_) * L.col(i);
 
-    //Normalizing phi_sig_aug
+    /*
+    Normalizing phi_sig_aug
     while (Xsig_aug(3, i+1) >  M_PI) Xsig_aug(3, i+1) -= 2.*M_PI;
     while (Xsig_aug(3, i+1) < -M_PI) Xsig_aug(3, i+1) += 2.*M_PI;
 
     while (Xsig_aug(3, i+1+n_aug_) >  M_PI) Xsig_aug(3, i+1+n_aug_) -= 2.*M_PI;
     while (Xsig_aug(3, i+1+n_aug_) < -M_PI) Xsig_aug(3, i+1+n_aug_) += 2.*M_PI;
+    */
   }
 
   //print result
