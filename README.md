@@ -2,6 +2,9 @@
 
 In this project utilize an Unscented Kalman Filter to estimate the state of a moving object of interest with noisy lidar and radar measurements. 
 
+![UKF](https://github.com/jwangjie/jwangjie.github.io/blob/master/files/UKF.gif)
+
+
 * Why: sensor measurement & physical model are not perfect
 
 * How: assuming sensor measurements & physical model are Gaussian distributions
